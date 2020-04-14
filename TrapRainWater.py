@@ -29,28 +29,54 @@ class Solution:
         return result
 
     def trap_dp(self,height):
-        # dynamic programming;  cannot pass in leetcode. runtime error.
+        # dynamic programming;
         #pre-compute the highest bar on both sides of each element, then use this for further calculation of water volumns
+        if height is None or len(height)<3:
+            return 0
         n=len(height)
         left=n*[0]
         right=n*[0]
         water=0
-        # fill the left bar
+        # fill the left bar,Find maximum height of bar from the left end upto an index;
+        # i in the array left_max.
         left[0]=height[0]
         for i in range(1,n):
             left[i]=max(left[i-1],height[i])
         right[n-1]=height[n-1]
+        #Find maximum height of bar from the right end upto an index i in the array right_max;
         for i in range(n-2,-1,-1):
             right[i]=max(right[i+1],height[i])
         for i in range(n):
             water+=min(left[i],right[i])-height[i]
-
         return water
+
+    def trap_twoPointer(self,height):
+        ## two pointers.
+        if height is None or len(height)<3:
+            return 0
+        n=len(height)
+        i=0
+        j=n-1
+        level=water=0
+        while i<j:
+            it=height[i if height[i]<height[j] else j]
+            if height[i]<height[j]:
+                i+=1
+            else:
+                j-=1
+            if level>it:
+                water+=level-it
+            else:
+                level=it
+        return water
+
 
 height=[0,1,0,2,1,0,1,3,2,1,2,1]
 solution=Solution()
 # ans=solution.trap(height)
-ans=solution.trap_dp(height)
+# ans=solution.trap_dp(height)
+ans=solution.trap_twoPointer(height)
 print (ans)
+
 
 
