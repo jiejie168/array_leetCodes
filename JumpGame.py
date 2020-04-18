@@ -1,4 +1,5 @@
 __author__ = 'Jie'
+from sklearn import preprocessing
 """
 55. Jump Game
 
@@ -41,7 +42,39 @@ class Solution:
             i+=1
         return False
 
+    def canJump_1(self,nums):
+        #naive method, backtracking. using recursive. O(n2) complexity
+        # remember that the recursive problem can be generally replaced by DP method.
+        return self.canJumpFromPosition(0,nums)
+    def canJumpFromPosition(self,position,nums):
+        # this is a help function for canJump_1()
+        # this mehtod can be also upgraded, check the nextPoint from right to left.
+        n=len(nums)
+        if position==n-1:
+            return True
+        furthestJump=min(nums[position]+position,n-1) # the furthest location it can jump
+        nextPosition=position+1
+        #nextPosition=furthestJump
+        while nextPosition<=furthestJump:
+            #while nextPosition>position:
+            # the location of next position should be smaller than the furthest jump
+            if self.canJumpFromPosition(nextPosition,nums):
+                return True
+            nextPosition+=1
+        return False
+
+    def canJump_2(self,nums):
+        #greedy algorithm
+        n=len(nums)
+        left_most=n-1
+        for i in range(n-1,-1,-1):
+            if i+nums[i]>=left_most:
+                left_most=i
+        return left_most==0
+
 solution=Solution()
 nums=[3,2,1,0,4]
-ans=solution.canJump(nums)
+# ans=solution.canJump(nums)
+ans=solution.canJump_1(nums)
 print(ans)
+
